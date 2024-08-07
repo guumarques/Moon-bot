@@ -1,4 +1,1 @@
-# Moon-bot
-This is Santuario Lunar's bot development repository
-
-[![Readme Card](https://github-readme-stats.vercel.app/api/pin/?username=guumarques&repo=Moon-bot)](https://github.com/guumarques/Moon-bot)
+[![guumarques/Moon-bot - GitHub](https://gh-card.dev/repos/guumarques/Moon-bot.svg)](https://github.com/guumarques/Moon-bot)
