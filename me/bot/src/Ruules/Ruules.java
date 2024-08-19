@@ -22,7 +22,7 @@ public class Ruules extends ListenerAdapter
 
          String[] args = event.getMessage().getContentRaw().split(" ");
  
-         if(args[0].equalsIgnoreCase(Moon.prefixMap.get(event.getGuild().getIdLong()) + "embed"))
+         if(args[0].equalsIgnoreCase("!embed"))
          {
             if(event.getChannel().getIdLong() == 1224853700388982844L)
             {

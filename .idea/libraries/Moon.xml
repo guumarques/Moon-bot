@@ -1,7 +1,7 @@
 <component name="libraryTable">
-  <library name="bot">
+  <library name="Moon">
     <CLASSES>
-      <root url="jar://$PROJECT_DIR$/me/bot/bot.zip!/" />
+      <root url="jar://$PROJECT_DIR$/me/bot/build-jar/Moon.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES />

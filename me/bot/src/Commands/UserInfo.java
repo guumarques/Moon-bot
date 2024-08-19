@@ -44,7 +44,7 @@ public class UserInfo extends ListenerAdapter {
         TextChannel textChannel = event.getGuild().getTextChannelById("1223674414667792484");
 
         if (args.length >= 2
-                && args[0].equalsIgnoreCase(Moon.prefixMap.get(event.getGuild().getIdLong()) + "perfil")) // aqui é
+                && args[0].equalsIgnoreCase("!perfil")) // aqui é
                                                                                                              // pra ver
                                                                                                              // se eu
                                                                                                              // estou
@@ -85,7 +85,7 @@ public class UserInfo extends ListenerAdapter {
         }
 
         if (args.length == 1
-                && args[0].equalsIgnoreCase(Moon.prefixMap.get(event.getGuild().getIdLong()) + "perfil")) // aqui é
+                && args[0].equalsIgnoreCase("!perfil")) // aqui é
                                                                                                              // se a
                                                                                                              // própria
                                                                                                              // pessoa

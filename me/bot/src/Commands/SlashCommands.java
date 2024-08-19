@@ -1,24 +1,8 @@
 package Commands;
 
-import java.awt.Color;
-import java.io.IOException;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.text.SimpleDateFormat;
-import java.time.Instant;
-import java.util.Collections;
-import java.util.Date;
-import java.util.EnumSet;
-import java.util.List;
-import java.util.TimeZone;
-import java.util.Timer;
-import java.util.TimerTask;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.Permission;
-import net.dv8tion.jda.api.entities.Member;
-import net.dv8tion.jda.api.entities.Role;
-import net.dv8tion.jda.api.entities.User;
+import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.entities.channel.concrete.Category;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import net.dv8tion.jda.api.entities.emoji.CustomEmoji;
@@ -29,10 +13,17 @@ import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.Commands;
 import net.dv8tion.jda.api.interactions.commands.build.SubcommandData;
 import net.dv8tion.jda.api.requests.restaction.RoleAction;
-import net.dv8tion.jda.api.entities.Guild;
-import net.dv8tion.jda.api.entities.Icon;
-
-import javax.xml.transform.Result;
+import javax.imageio.ImageIO;
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.*;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.text.SimpleDateFormat;
+import java.util.List;
+import java.util.*;
 
 public class SlashCommands extends ListenerAdapter
 {
@@ -58,7 +49,58 @@ public class SlashCommands extends ListenerAdapter
         Role minguante = event.getGuild().getRoleById("1225963823815458948");
         var hasMinguante = hasRole(member, minguante);
         //-----------------------------------------------------------------
+        if(command.equals("contador"))
+        {
+            String subcommand = event.getSubcommandName();
+            if(subcommand.equals("rank"))
+            {
+                try
+                {
+                    String query = "SELECT idMembro, nome, contador FROM counter ORDER BY contador DESC";
+                    Statement statement = ConnectionDB.getBumpConnection().createStatement();
 
+                    ResultSet rs = statement.executeQuery(query);
+
+                    StringBuilder ranking = new StringBuilder();
+
+                    int position = 1;
+                    while (rs.next())
+                    {
+                        String nome = rs.getString("nome");
+                        String memberID = rs.getString("idMembro");
+                        int bumps = rs.getInt("contador");
+
+                        // Adicionar o ranking na StringBuilder
+                        ranking.append("**"+ position + "** - **" + nome + "** (" + memberID + ") ** - " + bumps + "** **bumps**\n");
+                        position++;
+                    }
+
+                    // ---------------------------------------------------------------------------------------
+                    // Define o formato da data e hora
+                    SimpleDateFormat formatar = new SimpleDateFormat("dd/MM/yyyy - HH:mm:ss");
+                    formatar.setTimeZone(TimeZone.getTimeZone("America/Sao_Paulo")); // Define o fuso horário para Brasília
+
+                    // Obtém a data e hora atual e formata
+                    Date data = new Date();
+                    String dataFormatada = formatar.format(data);
+
+                    // ---------------------------------------------------------------------------------------
+
+                    EmbedBuilder embed = new EmbedBuilder()
+                            .setAuthor("●▬▬▬▬▬▬▬▬▬▬๑۩۩๑▬▬▬▬▬▬▬▬▬▬●")
+                            .setTitle("<a:vssparkly:1274804830220587140> **Rank Bump** <a:vssparkly:1274804830220587140>")
+                            .setDescription(ranking.toString())
+                            .setColor(Color.yellow)
+                            .setFooter("Bump Ranking - Atualizado em " + dataFormatada);
+
+                    event.getChannel().sendMessageEmbeds(embed.build()).queue();
+                }
+                catch (SQLException e)
+                {
+                    e.printStackTrace();
+                }
+            }
+        }
         if (command.equals("falar"))
         {
             if (event.getOption("texto") != null) {
@@ -224,11 +266,105 @@ public class SlashCommands extends ListenerAdapter
         return memberRoles.contains(role);
     }
 
+    public int hasVip(String memberid)
+    {
+        try
+        {
+            String queryCheck = "SELECT idCustomRole, loverIdRole FROM eclipsevip WHERE memberID = ?";
+            PreparedStatement checkStatement = ConnectionDB.getConexao().prepareStatement(queryCheck);
+            checkStatement.setString(1, memberid);
+            ResultSet resultSet = checkStatement.executeQuery();
+
+            String getidCustomRole = null;
+            String getloverIdRole = null;
+            if(resultSet.next())
+            {
+                getidCustomRole = resultSet.getString("idCustomRole");
+                getloverIdRole = resultSet.getString("loverIdRole");
+            }
+
+            if(getidCustomRole == null && getloverIdRole == null)
+            {
+                return 2; //membro ainda não usou nenhum dos dois comandos
+            }
+
+            else if(getloverIdRole != null && getidCustomRole == null)
+            {
+                return 1; //update no cargo personalizado único do membro
+                //isso é no caso da pessoa utilizar o comando /eclipselover antes do /eclipsevip
+                //vai ter que ser update porque o membro já estaria no banco de dados
+            }
+
+            else if(getloverIdRole == null && getidCustomRole != null)
+            {
+                return 0; //não posso usar o comando o /eclipsevip de novo
+            }
+
+            else if(getloverIdRole != null && getidCustomRole != null)
+            {
+                return 3;
+            }
+
+        }
+        catch (SQLException e)
+        {
+            // TODO: handle exception
+            return 0;
+        }
+
+        return 4;
+    }
+
+    public boolean hasLover(String memberid, String loverid)
+    {
+        try
+        {
+            String query = "SELECT memberID, loverId FROM eclipsevip WHERE memberID = ? and loverId = ?";
+            PreparedStatement statement = null;
+            statement = ConnectionDB.getConexao().prepareStatement(query);
+
+            statement.setString(1, memberid);
+            statement.setString(2, loverid);
+
+            ResultSet resultSet = statement.executeQuery(); // Executa a consulta e obtém o resultado
+
+            return resultSet.next();
+        }
+        catch (SQLException e)
+        {
+            // TODO: handle exception
+            return false;
+        }
+    }
+
+    // Método para converter imagem usando InputStream e OutputStream
+    public static boolean convertImg(InputStream inputImgStream, OutputStream outputImgStream, String formatType) throws IOException
+    {
+        // Ler a imagem a partir do InputStream
+        BufferedImage inputImage = ImageIO.read(inputImgStream);
+
+        // Escrever a imagem convertida no OutputStream
+        boolean result = ImageIO.write(inputImage, formatType, outputImgStream);
+
+        // Fechar os streams
+        outputImgStream.close();
+        inputImgStream.close();
+
+        return result;
+    }
     @Override
     public void onGuildReady(GuildReadyEvent event)
     {
 
         event.getGuild().updateCommands().addCommands(
+                Commands.slash("remove", "remove alguma informação de algum membro")
+                        .addSubcommands(
+                                new SubcommandData("eclipsefriend", "remov  e o cargo de alguém que possui a sua tag")
+                                        .addOption(OptionType.USER, "nome", "nome de quem gostaria de remover a tag", true)
+
+                        ),
+
+
                 Commands.slash("mudae", "comando da mudae")
                         .addSubcommands(
                                 new SubcommandData("addquarentena", "aplica quarentena a um membro")
@@ -243,7 +379,12 @@ public class SlashCommands extends ListenerAdapter
 
 
                 Commands.slash("falar", "digite um texto e o bot irá mandar no chat")
-                        .addOption(OptionType.STRING, "texto", "digite o texto que o bot usará no chat", true)
+                        .addOption(OptionType.STRING, "texto", "digite o texto que o bot usará no chat", true),
+
+                Commands.slash("contador", "mostra o ranking de bumps")
+                        .addSubcommands(
+                                new SubcommandData("rank", "mostra o ranking")
+                        )
         ).queue();
 
     }

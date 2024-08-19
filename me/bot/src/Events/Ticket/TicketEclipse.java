@@ -15,13 +15,13 @@ import java.util.Collections;
 import java.util.EnumSet;
 import java.util.concurrent.TimeUnit;
 
-public class TicketMinguante extends ListenerAdapter
+public class TicketEclipse extends ListenerAdapter
 {
     private static final String OWNER_ROLE_ID = "1223394386558320680";
-    private static final String TICKET_CHANNEL_MINGUANTE_ID = "1228889937617883166";
+    private static final String TICKET_CHANNEL_ECLIPSE_ID = "1228889717014270024";
     private static final String VIP_CATEGORY_ID = "1228889229816369264";
 
-    String idcargoMinguante = "1225963823815458948";
+    String idcargoEcplise = "1223689600321454153";
 
     @Override
     public void onMessageReceived(MessageReceivedEvent event) {
@@ -30,7 +30,7 @@ public class TicketMinguante extends ListenerAdapter
         String content = message.getContentRaw();
 
         // Verificar se a mensagem foi enviada no canal de tickets
-        if (event.getChannel().getId().equals(TICKET_CHANNEL_MINGUANTE_ID)) {
+        if (event.getChannel().getId().equals(TICKET_CHANNEL_ECLIPSE_ID)) {
             if (content.equalsIgnoreCase("!openticket")) {
                 openTicket(event.getGuild(), event.getMember());
             }
@@ -38,27 +38,35 @@ public class TicketMinguante extends ListenerAdapter
     }
 
     private void openTicket(Guild guild, Member member) {
-        TextChannel ticketChannel = guild.getTextChannelById(TICKET_CHANNEL_MINGUANTE_ID);
+        TextChannel ticketChannel = guild.getTextChannelById(TICKET_CHANNEL_ECLIPSE_ID);
         if (ticketChannel == null) {
             System.out.println("Canal de ticket não encontrado!");
             return;
         }
 
         // Criar embed para a mensagem de boas-vindas
-        Color minhacor = new Color(0, 0, 0);
+        Color minhacor = new Color(255,65,96,255);
         EmbedBuilder welcomeEmbed = new EmbedBuilder()
                 .setAuthor("››>> Vip's Santuário Lunar <<‹‹")
-                .setTitle("<:8283moon3:1228440485174185985> " + " Vip Minguante")
-                .setDescription("<a:2952arrow:1228440481504170097>  Criar seu proprio cargo !\n" +
-                        "<a:2952arrow:1228440481504170097>  Editar emoji do cargo !\n" +
-                        "<a:2952arrow:1228440481504170097>  Modificar sua Tag !\n" +
-                        "<a:2952arrow:1228440481504170097>  Mandar imagem no chat geral !")
+                .setTitle("<:4114pinkmoon:1228440490727182366> "+ "Vip Eclipse")
+                .setDescription("Quais os beneficios desse Vip? Veja logo abaixo!\n\n" +
+                        "<a:5274pinkarrow:1228440493646680156>  Criar cargo `eclipsevip`\n" +
+                        "<a:5274pinkarrow:1228440493646680156>  Editar o cargo `eclipsevip`\n" +
+                        "<a:5274pinkarrow:1228440493646680156>  Criar e atribuir o cargo `eclipselover`\n" +
+                        "<a:5274pinkarrow:1228440493646680156>  Editar o cargo `eclipselover` \n" +
+                        "<a:5274pinkarrow:1228440493646680156>  Criar e dar cargo `eclipsefriend`\n" +
+                        "<a:5274pinkarrow:1228440493646680156>  Editar `eclipsefriend`\n" +
+                        "<a:5274pinkarrow:1228440493646680156>  Criar sua propria call\n" +
+                        "<a:5274pinkarrow:1228440493646680156>  Mandar imagem no chat geral\n\n" +
+                        "- **eclipsevip** - cargo único personalizável com emoji e cor\n" +
+                        "- **eclipselover** - cargo compartilhado com apenas uma pessoa, também personalizável\n" +
+                        "- **eclipsefriend** - cargo compartilhado com mais de uma pessoa, também personalizável. O VIP Eclipse possui uma limitação de [**12 pessoas**](https://www) para atribuir o cargo")
                 .setColor(minhacor)
-                .setImage("https://media1.tenor.com/m/2wOE39lsDkEAAAAC/scawlkdfawf.gif")
-                .setThumbnail("https://cdn.discordapp.com/attachments/1118914929399955538/1228607288428990504/minguante.png?ex=662ca8b3&is=661a33b3&hm=aa2cb804a654d6f323d8c3df552e9349dff1bdb5ac36c880482fa3984bd14377&")
-                .addField("Cargo : ", guild.getRoleById(idcargoMinguante).getAsMention(), false);
+                .setThumbnail("https://cdn.discordapp.com/attachments/1118914929399955538/1228591854199767120/eclipse.png?ex=662c9a54&is=661a2554&hm=48b133689f3f7bd613a4f22a1d394d77344267cb84269be6139fb2872ec4cd35&")
+                .setImage("https://i.pinimg.com/originals/37/f1/c6/37f1c6385e090fe8ff4c0da9ad5f8493.gif")
+                .addField("Cargo : ", guild.getRoleById(idcargoEcplise).getAsMention(), false);
 
-        TextChannel textChannel = guild.getTextChannelById(TICKET_CHANNEL_MINGUANTE_ID);
+        TextChannel textChannel = guild.getTextChannelById(TICKET_CHANNEL_ECLIPSE_ID);
 
         if (textChannel != null) {
             textChannel.sendMessageEmbeds(welcomeEmbed.build()).queue();
@@ -68,7 +76,7 @@ public class TicketMinguante extends ListenerAdapter
 
 
         // Adicionar botão de abrir ticket
-        Button ticketButton = Button.primary("open_minguante_ticket", "Comprar agora");
+        Button ticketButton = Button.primary("open_eclipse_ticket", "Comprar agora");
 
         // Enviar embed com o botão
         ticketChannel.sendMessageEmbeds(welcomeEmbed.build())
@@ -82,13 +90,13 @@ public class TicketMinguante extends ListenerAdapter
     public void onButtonInteraction(ButtonInteractionEvent event)
     {
         super.onButtonInteraction(event);
-        if (event.getButton().getId().equals("open_minguante_ticket")) {
+        if (event.getButton().getId().equals("open_eclipse_ticket")) {
             Guild guild = event.getGuild();
             Member member = event.getMember();
             Category supportCategory = guild.getCategoryById(VIP_CATEGORY_ID);
 
             // Criar canal de ticket
-            TextChannel ticketChannel = guild.createTextChannel("minguante-vip-" + member.getUser().getName())
+            TextChannel ticketChannel = guild.createTextChannel("eclipsevip-" + member.getUser().getName())
                     .setParent(supportCategory)
                     .setTopic("Ticket for " + member.getUser().getName())
                     .addPermissionOverride(member, EnumSet.of(Permission.VIEW_CHANNEL, Permission.MESSAGE_HISTORY, Permission.MESSAGE_SEND, Permission.MESSAGE_ATTACH_FILES), Collections.emptyList())  // Allow specific permissions to member
@@ -99,15 +107,15 @@ public class TicketMinguante extends ListenerAdapter
             ticketChannel.sendMessage(member.getAsMention() + guild.getRoleById(OWNER_ROLE_ID).getAsMention()).queue();
             Color minhacor = new Color(255, 255, 255);
             EmbedBuilder welcomeEmbed = new EmbedBuilder()
-                    .setTitle("Bem-vindo ao canal de Compra do Minguante!")
+                    .setTitle("Bem-vindo ao canal de Compra do Eclipse!")
                     .setThumbnail(event.getMember().getEffectiveAvatarUrl())
                     .addField("<a:almdecorbowpink:1223409342376706139> **Instruções de pagamento:**", "\n\n"
-                            + "  <a:Love:1224449007204696237> Enviar pix clicando no link: https://nubank.com.br/cobrar/9855g/6618b2e0-de50-4c13-8bae-5c1163e18621\n\n"
+                            + "  <a:Love:1224449007204696237> Enviar pix clicando no link: https://nubank.com.br/cobrar/9855g/6618b293-4af9-4fa6-8ce0-7196b337ef05\n\n"
                             + " <a:Love:1224449007204696237> Após enviar o pagamento, anexe o comprovante e aguarde a confirmação dos ADM's", false)
                     .addField("<a:almdecorbowpink:1223409342376706139> **Detalhes do VIP:**", "\n\n"
-                            +"   <a:Love:1224449007204696237> Preço: **R$ 3,00** \n"
-                            + "  <a:Love:1224449007204696237> Confira novamente os benefícios em <#1228889937617883166>\n\n"
-                            + "Agradecemos por considerar a compra do VIP "+ guild.getRoleById(idcargoMinguante).getAsMention() + "em nosso servidor! Estamos ansiosos para "
+                            +"   <a:Love:1224449007204696237> Preço: **R$ 10,00** \n"
+                            + "  <a:Love:1224449007204696237> Confira novamente os benefícios em <#1228889717014270024>\n\n"
+                            + "Agradecemos por considerar a compra do VIP "+ guild.getRoleById(idcargoEcplise).getAsMention() + "em nosso servidor! Estamos ansiosos para "
                             + " recebê-lo como um membro VIP! <:aw:1223409367169368195> ", false)
 
                     .setImage("https://cdn.discordapp.com/attachments/875131727041937420/877723401219878972/image3-1-4.gif?ex=6629af9e&is=66173a9e&hm=8d572ef3e046609f63e0dedb97052e108a957aba4073e59920e823a546cbef3e&")
@@ -115,7 +123,7 @@ public class TicketMinguante extends ListenerAdapter
 
 
 
-            Button ticketButton = Button.primary("close_minguante_ticket", "Fechar o Ticket agora");
+            Button ticketButton = Button.primary("close_eclipse_ticket", "Fechar o Ticket agora");
 
             // Enviar embed com o botão
             ticketChannel.sendMessageEmbeds(welcomeEmbed.build()).setActionRow(ticketButton).queue();
@@ -124,7 +132,7 @@ public class TicketMinguante extends ListenerAdapter
 
         }
 
-        if (event.getComponentId().equals("close_minguante_ticket"))
+        if (event.getComponentId().equals("close_eclipse_ticket"))
         {
             if (event.getChannel() instanceof TextChannel) {
                 TextChannel ticketChannel = (TextChannel) event.getChannel();

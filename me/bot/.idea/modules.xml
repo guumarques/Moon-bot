@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/Moon bot.iml" filepath="$PROJECT_DIR$/Moon bot.iml" />
+      <module fileurl="file://$PROJECT_DIR$/bot.iml" filepath="$PROJECT_DIR$/bot.iml" />
     </modules>
   </component>
 </project>

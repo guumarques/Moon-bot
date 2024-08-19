@@ -49,13 +49,15 @@ public class TicketLuaCheia extends ListenerAdapter
         EmbedBuilder welcomeEmbed = new EmbedBuilder()
                 .setAuthor("››>> Vip's Santuário Lunar <<‹‹")
                 .setTitle("<:9057moon1:1228440487594164334> " + " Vip Lua Cheia")
-                .setDescription("<a:5574_heartarrow_yellow:1228440483739471912>  Criar seu proprio cargo !\n" +
-                        "<a:5574_heartarrow_yellow:1228440483739471912>  Editar emoji do cargo !\n" +
-                        "<a:5574_heartarrow_yellow:1228440483739471912>  Modificar sua Tag !\n" +
-                        "<a:5574_heartarrow_yellow:1228440483739471912>  Dar cargo de amigos para call !\n" +
-                        "<a:5574_heartarrow_yellow:1228440483739471912>  Editar nome de cargo dos amigos !\n" +
-                        "<a:5574_heartarrow_yellow:1228440483739471912>  Criar sua propria call !\n" +
-                        "<a:5574_heartarrow_yellow:1228440483739471912>  Mandar imagem no chat geral !")
+                .setDescription("Quais os beneficios desse Vip? Veja logo abaixo!\n\n" +
+                        "<a:download:1261792222320398456>  Criar cargo `moonvip`\n" +
+                        "<a:download:1261792222320398456>  Editar o cargo `moonvip`\n" +
+                        "<a:download:1261792222320398456>  Criar e dar cargo `moonfriend`\n" +
+                        "<a:download:1261792222320398456>  Editar `moonfriend`\n" +
+                        "<a:download:1261792222320398456>  Criar sua propria call\n" +
+                        "<a:download:1261792222320398456>  Mandar imagem no chat geral\n\n" +
+                        "- **moonvip** - cargo único personalizável\n" +
+                        "- **moonfriend** - cargo compartilhado com mais de uma pessoa, também personalizável. O VIP Lua Cheia possui uma limitação de [**8 pessoas**](https://www) para atribuir o cargo")
                 .setColor(minhacor)
                 .setImage("https://media1.tenor.com/m/hVxzEeY3_asAAAAC/flower-rain.gif")
                 .setThumbnail("https://cdn.discordapp.com/attachments/1118914929399955538/1228606934551367753/luacheia.png?ex=662ca85f&is=661a335f&hm=350c56eb8c140859d50a738b97691454e3ea1dff88369208a5c703b7e28189d2&")

@@ -2,24 +2,26 @@ package main;
 
 import java.sql.SQLException;
 import java.util.EnumSet;
-import java.util.HashMap;
-import java.util.Map;
 import javax.security.auth.login.LoginException;
+import Commands.ResetXPLevel;
+import Commands.SlashCommands;
+import Commands.UserInfo;
+import Events.BumpCounter;
+import Events.MemberCounter;
+import Events.mudaeRules;
+import Events.Ticket.*;
+import net.dv8tion.jda.api.JDA;
+import net.dv8tion.jda.api.JDABuilder;
+import net.dv8tion.jda.api.OnlineStatus;
+import net.dv8tion.jda.api.entities.Activity;
+import net.dv8tion.jda.api.requests.GatewayIntent;
 
-public class Moon 
+public class Moon
 {
 
     public static JDA jda;// estou tornando ele estático para que eu possar acessar de outra classe
-    public static Map<Long, String> mapGuildName = new HashMap<>(); // isso é para diferenciar os servidores. Ele pega o
-                                                                    // ID, do tipo Long e o nome do servidor, do tipo
-                                                                    // String
-    public static Map<Long, Character> prefixMap = new HashMap<>(); // isso é para o prefixo de cada servidor
-    public static Map<Long, Long> JoinChannelMap = new HashMap<>();
-    public static Map<Long, Long> LeaveChannelMap = new HashMap<>();
     public static void main(String[] args) throws LoginException, InterruptedException, Exception, SQLException 
     {
-
-
         jda = JDABuilder.create("", EnumSet.allOf(GatewayIntent.class)).build();
 
         jda.addEventListener(new MemberCounter());
@@ -34,12 +36,9 @@ public class Moon
         jda.addEventListener(new TicketMinguante());
         jda.addEventListener(new ResetXPLevel());
         jda.addEventListener(new mudaeRules());
+        jda.addEventListener(new BumpCounter());
 
         jda.getPresence().setActivity(Activity.customStatus("Cuidando do servidor..."));
         jda.getPresence().setStatus(OnlineStatus.ONLINE);
-
-        SlashCommands slash = new SlashCommands();
     }
-       
-    
 }
