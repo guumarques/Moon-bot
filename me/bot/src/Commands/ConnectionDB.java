@@ -52,6 +52,74 @@ public class ConnectionDB
                         "     removed TEXT\n" +
                         ");\n");
 
+                statement.executeUpdate("create table if not exists mensalidade(\n" +
+                        "    id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,\n" +
+                        "    nome TEXT,\n" +
+                        "    idMembro TEXT,\n" +
+                        "    data_inicio TEXT\n" +
+                        "    data_final TEXT\n" +
+                        "    tipo_vip TEXT\n" +
+                        ");\n");
+
+                statement.executeUpdate("CREATE TABLE IF NOT EXISTS moonvip\n" +
+                        "(\n" +
+                        "\n" +
+                        "    id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,\n" +
+                        "\n" +
+                        "    nome TEXT,\n" +
+                        "\n" +
+                        "    memberID TEXT,\n" +
+                        "\n" +
+                        "    idVip TEXT,\n" +
+                        "\n" +
+                        "    tipo TEXT,\n" +
+                        "\n" +
+                        "    idCustomRole TEXT,\n" +
+                        "\n" +
+                        "    nameCustomRole TEXT,\n" +
+                        "\n" +
+                        "    callName TEXT,\n" +
+                        "\n" +
+                        "    callID TEXT\n" +
+                        ");");
+
+                statement.executeUpdate("create table if not exists moonfriend(\n" +
+                        "\n" +
+                        "    id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,\n" +
+                        "\n" +
+                        "    nome TEXT,\n" +
+                        "\n" +
+                        "    memberID TEXT,\n" +
+                        "\n" +
+                        "    friendName TEXT,\n" +
+                        "\n" +
+                        "    friendID TEXT,\n" +
+                        "\n" +
+                        "    createdFriendRoleID TEXT,\n" +
+                        "\n" +
+                        "    createdFriendRoleName TEXT,\n" +
+                        "\n" +
+                        "    removed TEXT\n" +
+                        ");");
+
+                statement.executeUpdate("CREATE TABLE IF NOT EXISTS minguantevip\n" +
+                        "(\n" +
+                        "\n" +
+                        "    id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,\n" +
+                        "\n" +
+                        "    nome TEXT,\n" +
+                        "\n" +
+                        "    memberID TEXT,\n" +
+                        "\n" +
+                        "    idVip TEXT,\n" +
+                        "\n" +
+                        "    tipo TEXT,\n" +
+                        "\n" +
+                        "    idCustomRole TEXT,\n" +
+                        "\n" +
+                        "    nameCustomRole TEXT\n" +
+                        "\n" +
+                        ");");
                 return connection;
             }
             else

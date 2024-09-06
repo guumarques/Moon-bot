@@ -53,7 +53,7 @@ public class TicketMinguante extends ListenerAdapter
                         "<a:Seta_preta:1261768702865444935>  Criar cargo `minguantevip`\n" +
                         "<a:Seta_preta:1261768702865444935>  Editar o cargo `minguantevip`\n" +
                         "<a:Seta_preta:1261768702865444935>  Mandar imagem no chat geral\n\n" +
-                        "- **minguantevip** - cargo único personalizável com emoji e cor\n")
+                        "> **minguantevip** - cargo único personalizável com emoji e cor\n")
                 .setColor(minhacor)
                 .setImage("https://media1.tenor.com/m/2wOE39lsDkEAAAAC/scawlkdfawf.gif")
                 .setThumbnail("https://cdn.discordapp.com/attachments/1118914929399955538/1228607288428990504/minguante.png?ex=662ca8b3&is=661a33b3&hm=aa2cb804a654d6f323d8c3df552e9349dff1bdb5ac36c880482fa3984bd14377&")

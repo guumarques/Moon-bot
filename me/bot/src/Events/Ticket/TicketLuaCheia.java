@@ -56,8 +56,8 @@ public class TicketLuaCheia extends ListenerAdapter
                         "<a:download:1261792222320398456>  Editar `moonfriend`\n" +
                         "<a:download:1261792222320398456>  Criar sua propria call\n" +
                         "<a:download:1261792222320398456>  Mandar imagem no chat geral\n\n" +
-                        "- **moonvip** - cargo único personalizável\n" +
-                        "- **moonfriend** - cargo compartilhado com mais de uma pessoa, também personalizável. O VIP Lua Cheia possui uma limitação de [**8 pessoas**](https://www) para atribuir o cargo")
+                        "> **moonvip** - cargo único personalizável\n" +
+                        "> **moonfriend** - cargo compartilhado com mais de uma pessoa, também personalizável. O VIP Lua Cheia possui uma limitação de [**8 pessoas**](https://www) para atribuir o cargo")
                 .setColor(minhacor)
                 .setImage("https://media1.tenor.com/m/hVxzEeY3_asAAAAC/flower-rain.gif")
                 .setThumbnail("https://cdn.discordapp.com/attachments/1118914929399955538/1228606934551367753/luacheia.png?ex=662ca85f&is=661a335f&hm=350c56eb8c140859d50a738b97691454e3ea1dff88369208a5c703b7e28189d2&")

@@ -58,9 +58,9 @@ public class TicketEclipse extends ListenerAdapter
                         "<a:5274pinkarrow:1228440493646680156>  Editar `eclipsefriend`\n" +
                         "<a:5274pinkarrow:1228440493646680156>  Criar sua propria call\n" +
                         "<a:5274pinkarrow:1228440493646680156>  Mandar imagem no chat geral\n\n" +
-                        "- **eclipsevip** - cargo único personalizável com emoji e cor\n" +
-                        "- **eclipselover** - cargo compartilhado com apenas uma pessoa, também personalizável\n" +
-                        "- **eclipsefriend** - cargo compartilhado com mais de uma pessoa, também personalizável. O VIP Eclipse possui uma limitação de [**12 pessoas**](https://www) para atribuir o cargo")
+                        "> **eclipsevip** - cargo único personalizável com emoji e cor\n" +
+                        "> **eclipselover** - cargo compartilhado com apenas uma pessoa, também personalizável\n" +
+                        "> **eclipsefriend** - cargo compartilhado com mais de uma pessoa, também personalizável. O VIP Eclipse possui uma limitação de [**12 pessoas**](https://www) para atribuir o cargo")
                 .setColor(minhacor)
                 .setThumbnail("https://cdn.discordapp.com/attachments/1118914929399955538/1228591854199767120/eclipse.png?ex=662c9a54&is=661a2554&hm=48b133689f3f7bd613a4f22a1d394d77344267cb84269be6139fb2872ec4cd35&")
                 .setImage("https://i.pinimg.com/originals/37/f1/c6/37f1c6385e090fe8ff4c0da9ad5f8493.gif")
