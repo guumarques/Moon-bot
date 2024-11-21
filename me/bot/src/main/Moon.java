@@ -66,6 +66,7 @@ public class Moon {
             return;
         }
 
+	//cargos
         Role eclipse = guild.getRoleById("1223689600321454153");
         Role luacheia = guild.getRoleById("1225963752076083231");
         Role minguante = guild.getRoleById("1225963823815458948");
