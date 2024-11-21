@@ -19,6 +19,7 @@ public class ParceriaTicket extends ListenerAdapter
 {
 
     private static final String OWNER_ROLE_ID = "1223394386558320680";
+    private static final String HELPER_ID = "1244410454458110092";
     private static final String TICKET_CHANNEL_ID = "1227975869817950248";
     private static final String PARCERIA_CATEGORY_ID = "1227975047029723247";
 
@@ -82,10 +83,11 @@ public class ParceriaTicket extends ListenerAdapter
                     .setTopic("Ticket for " + member.getUser().getName())
                     .addPermissionOverride(member, EnumSet.of(Permission.VIEW_CHANNEL, Permission.MESSAGE_HISTORY, Permission.MESSAGE_SEND, Permission.MESSAGE_ATTACH_FILES), Collections.emptyList())  // Allow specific permissions to member
                     .addPermissionOverride(guild.getRoleById(OWNER_ROLE_ID), EnumSet.of(Permission.VIEW_CHANNEL, Permission.MESSAGE_HISTORY, Permission.MESSAGE_SEND, Permission.MESSAGE_ATTACH_FILES), Collections.emptyList())  // Allow specific permissions to staff role
+                    .addPermissionOverride(guild.getRoleById(HELPER_ID), EnumSet.of(Permission.VIEW_CHANNEL, Permission.MESSAGE_HISTORY, Permission.MESSAGE_SEND, Permission.MESSAGE_ATTACH_FILES), Collections.emptyList())
                     .addPermissionOverride(guild.getPublicRole(), null, EnumSet.of(Permission.VIEW_CHANNEL))  // Nega permissões para o everyone
                     .complete();
 
-            ticketChannel.sendMessage(member.getAsMention() + guild.getRoleById(OWNER_ROLE_ID).getAsMention()).queue();
+            ticketChannel.sendMessage(member.getAsMention() + guild.getRoleById(OWNER_ROLE_ID).getAsMention() + guild.getRoleById(HELPER_ID).getAsMention()).queue();
             Color minhacor = new Color(255, 255, 255);
             EmbedBuilder welcomeEmbed = new EmbedBuilder()
             .setTitle("Bem-vindo ao canal de parcerias!")

@@ -1,6 +1,7 @@
 package EmbedMaker;
 
 import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.entities.Role;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import java.awt.Color;
@@ -16,34 +17,28 @@ public class EmbedMaker extends ListenerAdapter {
 
         Message message = event.getMessage();
         String content = message.getContentRaw();
+        Role boost = event.getGuild().getRoleById("1223395224626270409");
         
-        if (event.getChannel().getId().equals("1227975869817950248")) {
+        if (event.getChannel().getId().equals("1223401314617393162")) {
             if (content.equalsIgnoreCase("!embed")) {
                 Color minhacor = new Color(255, 255, 255);
                 Guild guild = event.getGuild();
 
                 EmbedBuilder welcomeEmbed = new EmbedBuilder()
-                        .setTitle("Bem-vindo ao canal de parcerias!")
+                        .setTitle("<:Booster:1292696909986922576> **Santuário Lunar - Booster** <a:evolving_badge_boost:1292696671410589706>")
                         .setThumbnail(event.getGuild().getIconUrl())
-                        .setDescription("Olá, pessoal. \n\n"
-                        + " Nosso servidor está em busca de novas parcerias. Se estiver administrando um servidor"
-                        + " e está interessado em fazer um parceria mútua, entre em contato conosco!")
-                        .addField("<a:almdecorbowpink:1223409342376706139> **Requisitos:**", "\n\n"
-                        + "  <a:Love:1224449007204696237> Mínimo de 100 membros no servidor \n"
-                        + "  <a:Love:1224449007204696237> Atividade regular e respeito às regras", false)
-                        .addField("<a:almdecorbowpink:1223409342376706139> **Benefícios:**", "\n\n"
-                        +"   <a:Love:1224449007204696237> Divulgação mútua nos canais de anúncio \n"
-                        + "  <a:Love:1224449007204696237> Integração da Comunidade", false)
-                        .addField("<a:almdecorbowpink:1223409342376706139> **Como fazer parceria:**", "\n\n"
-                        + "Entre em contato com pessoas de cargo " + guild.getRoleById("1223394386558320680").getAsMention() + "e informe o que é pedido abaixo:\n\n"
-                        + "  <a:Love:1224449007204696237> Nome do servidor \n"
-                        + "  <a:Love:1224449007204696237> Número de membros \n"
-                        + "  <a:Love:1224449007204696237> Breve descrição do servidor\n"
-                        + "  <a:Love:1224449007204696237> Link de convite permanente", false)
-                        .setImage("https://cdn.discordapp.com/attachments/875131727041937420/877723401219878972/image3-1-4.gif?ex=6629af9e&is=66173a9e&hm=8d572ef3e046609f63e0dedb97052e108a957aba4073e59920e823a546cbef3e&")
-                        .setColor(minhacor);
+                        .setDescription("<a:Boost:1292697291068801065> Ajude nosso servidor impulsionando e garanta os diversos benefícios abaixo. É muito simples e vantajoso <a:exclamation_animated:1292698505282064464> \n\n"
+                        + "<:4114pinkmoon:1228440490727182366> **Benefícios**\n"
+                                + " <a:dot_pink:1292697945350865038> Permissão de envio de imagens em outros chat's;\n"
+                                + " <a:dot_pink:1292697945350865038> Acesso à tag: " + boost.getAsMention() + ";\n"
+                                + " <a:dot_pink:1292697945350865038> Permissão para enviar emojis de outros servidores;\n"
+                                + " <a:dot_pink:1292697945350865038> Call exclusiva para boosters;\n"
+                                + " <a:dot_pink:1292697945350865038> Emblema de evolução no seu perfil;\n"
+                                + " <a:dot_pink:1292697945350865038> Tag's que evoluem com o passar do tempo de booster;\n"
+                                + " <a:dot_pink:1292697945350865038> E para finalizar um Bônus de xp.")
+                        .setColor(Color.decode("#fccfcc"));
 
-                TextChannel textChannel = event.getGuild().getTextChannelById("1227975869817950248");
+                TextChannel textChannel = event.getGuild().getTextChannelById("1223401314617393162");
 
                 if (textChannel != null) {
                     textChannel.sendMessageEmbeds(welcomeEmbed.build()).queue();

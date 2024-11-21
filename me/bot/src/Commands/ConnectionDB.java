@@ -150,6 +150,13 @@ public class ConnectionDB
                         "nome TEXT, \n" +
                         "contador INTEGER \n" +  // Use INTEGER para números
                         ");");
+
+                statement.executeUpdate("CREATE TABLE IF NOT EXISTS parceriaContador (\n" +
+                        "id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,\n" +
+                        "idMembro TEXT,\n" +
+                        "nome TEXT,\n" +
+                        "contador INTEGER \n" +
+                        ");");
                 return bumpConnection;
             }
             else

@@ -53,8 +53,6 @@ public class SlashCommands extends ListenerAdapter
         Role minguante = event.getGuild().getRoleById("1225963823815458948");
         var hasMinguante = hasRole(member, minguante);
         //-----------------------------------------------------------------
-
-
         if(command.equals("contador"))
         {
             String subcommand = event.getSubcommandName();
@@ -1297,7 +1295,7 @@ public class SlashCommands extends ListenerAdapter
                                                                     .setColor(role.getColor());
 
                                                             //tem que botar .queue aqui no debaixo, se não, não acontece nada
-                                                            guild.modifyRolePositions().selectPosition(role).moveAbove(event.getGuild().getRoleById("1224511106307854489")).queue();
+                                                            guild.modifyRolePositions().selectPosition(role).moveAbove(event.getGuild().getRoleById("1223412632850141237")).queue();
                                                             guild.addRoleToMember(member, role).queue();
 
                                                             event.getHook().sendMessageEmbeds(embedCriar.build()).queue();
@@ -1368,20 +1366,20 @@ public class SlashCommands extends ListenerAdapter
 
                 else if(subcommand.equals("eclipsecall"))
                 {
-                    String query = "select idCustomRole, callID from eclipsevip where memberID = ?";
-                    PreparedStatement statement = null;
-
+                    System.out.println("meu Deus");
                     try
                     {
-                        statement = ConnectionDB.getConexao().prepareStatement(query);
+                        String query = "select idCustomRole, callID from eclipsevip where memberID = ?";
+                        PreparedStatement statement = ConnectionDB.getConexao().prepareStatement(query);
                         statement.setString(1, member.getId());
-
+                        System.out.println("meu senhor");
                         ResultSet resultset = statement.executeQuery();
 
                         String getidCustomRole = null;
                         String getcallID = null;
                         if(resultset.next())
                         {
+                            System.out.println("me ajuda por favor");
                             getidCustomRole = resultset.getString("idCustomRole");
                             getcallID = resultset.getString("callID");
                             if(getidCustomRole != null && getcallID != null)
@@ -1397,7 +1395,6 @@ public class SlashCommands extends ListenerAdapter
 
                                     statement3.setString(1, member.getId());
                                     ResultSet resultset3 = statement3.executeQuery();
-
                                     if(resultset3.next())
                                     {
                                         String callEclipse = event.getOption("nome").getAsString();
@@ -1445,6 +1442,7 @@ public class SlashCommands extends ListenerAdapter
                                     }
                                     else
                                     {
+                                        System.out.println("Para criar a call, crie o cargo de **ECLIPSE FRIEND** com o comando `/criar eclipsefriend`");
                                         event.getHook().sendMessage("Para criar a call, crie o cargo de **ECLIPSE FRIEND** com o comando `/criar eclipsefriend`").queue();
                                     }
                                 }
@@ -1456,6 +1454,7 @@ public class SlashCommands extends ListenerAdapter
                         }
                         else
                         {
+                            System.out.println("Você ainda não utilizou um comando do VIP. Digite `/criar eclipsevip` ou `/criar eclipselover` para utilizar este comando!");
                             event.getHook().sendMessage("Você ainda não utilizou um comando do VIP. Digite `/criar eclipsevip` ou `/criar eclipselover` para utilizar este comando!").queue();
                         }
                     }
@@ -1702,55 +1701,68 @@ public class SlashCommands extends ListenerAdapter
                                     {
                                         if (exception != null)
                                         {
-                                            //reply error
                                             System.out.println("Ocorreu um erro ao baixar a imagem do emoji do membro " + member.getEffectiveName());
+                                            exception.printStackTrace();
                                         }
                                         else
                                         {
-                                            //Create the icon from the input stream
                                             try
                                             {
-                                                // Criar um OutputStream para armazenar a imagem convertida
+                                                System.out.println("Iniciando conversão de imagem.");
                                                 ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-
-                                                // Converter a imagem de GIF para PNG
                                                 boolean success = convertImg(inputStream, outputStream, "png");
 
                                                 if (success)
                                                 {
                                                     System.out.println("Conversão concluída com sucesso.");
-                                                    // Aqui você pode usar o OutputStream como necessário
-                                                    // Converter o OutputStream para InputStream para criar o Icon
                                                     InputStream pngInputStream = new ByteArrayInputStream(outputStream.toByteArray());
-
-                                                    // Criar o Icon a partir do InputStream
                                                     Icon icon = Icon.from(pngInputStream);
 
-                                                    //atualizando o cargo
+                                                    System.out.println("Atualizando o cargo com o novo ícone.");
                                                     role.getManager()
                                                             .setName(cargo)
                                                             .setColor(Color.decode(corCargo))
                                                             .setPermissions(Collections.singletonList(Permission.MESSAGE_SEND))
                                                             .setIcon(icon).queue();
 
+                                                    System.out.println("Removendo cargo antigo e atribuindo ao novo lover.");
+                                                    if(member2 != null)
+                                                    {
+                                                        event.getGuild().removeRoleFromMember(member2, role).queue();
+                                                        event.getGuild().addRoleToMember(user, role).queue();
+                                                    }
+                                                    else if(member2 == null)
+                                                    {
+                                                        event.getGuild().addRoleToMember(user, role).queue();
+                                                        System.out.println("Membro não encontado");
+                                                    }
 
-                                                    event.getGuild().removeRoleFromMember(member2, role).queue(); //removendo o cargo da pessoa que está no banco de dados
-                                                    event.getGuild().addRoleToMember(user, role).queue(); //adicionando o cargo ao novo lover
+                                                    // Cargo criado com sucesso
+                                                    String cargoMencionado = role.getAsMention();
+                                                    EmbedBuilder embedCriar = new EmbedBuilder()
+                                                            .setAuthor("●▬▬▬▬▬▬▬▬▬▬๑۩۩๑▬▬▬▬▬▬▬▬▬▬●")
+                                                            .setTitle("<a:6954sylveonhappy:1228896788921192458> Edição de Eclipse Lover <a:6954sylveonhappy:1228896788921192458>")
+                                                            .setThumbnail(event.getMember().getEffectiveAvatarUrl())
+                                                            .addField("`Novo Cargo`", cargoMencionado, true)
+                                                            .addField("`Novo Emoji`", emoji.get(0).getAsMention(), true)
+                                                            .addField("`Novo Lover`", user.getAsMention(), true)
+                                                            .setDescription("Eclipse lover editado com sucesso! 🎉")
+                                                            .setImage("https://cdn.discordapp.com/attachments/1151196703475638373/1175693456677539902/5EEB1AA6-B569-43A2-853C-5570A8E9FBD6.gif?ex=6641bbdb&is=66406a5b&hm=ed61b4ca4dee6807c99d9601dd1a8416996e0b8a6e06818031ff4e9178000266&")
+                                                            .setColor(role.getColor());
 
-                                                    //agora eu preciso atualizar o banco de dados com as informações do novo lover
+                                                    event.getHook().sendMessageEmbeds(embedCriar.build()).queue();
 
                                                     try
                                                     {
+                                                        System.out.println("Atualizando o banco de dados.");
                                                         String query2 = "update eclipsevip set loverId = ?, loverName = ?, loverRoleName = ? where memberID = ?";
                                                         PreparedStatement statement2 = ConnectionDB.getConexao().prepareStatement(query2);
-
                                                         statement2.setString(1, user.getId());
                                                         statement2.setString(2, user.getEffectiveName());
                                                         statement2.setString(3, cargo);
                                                         statement2.setString(4, member.getId());
 
                                                         int rowsAffected = statement2.executeUpdate();
-
                                                         if (rowsAffected > 0)
                                                         {
                                                             System.out.println("Lover atualizado com sucesso!");
@@ -1759,22 +1771,6 @@ public class SlashCommands extends ListenerAdapter
                                                         {
                                                             System.out.println("Deu problema ao atualizar o lover!");
                                                         }
-
-                                                        // Cargo criado com sucesso
-                                                        String cargoMencionado = role.getAsMention();
-                                                        EmbedBuilder embedCriar = new EmbedBuilder()
-                                                                .setAuthor("●▬▬▬▬▬▬▬▬▬▬๑۩۩๑▬▬▬▬▬▬▬▬▬▬●")
-                                                                .setTitle("<a:6954sylveonhappy:1228896788921192458> Edição de Eclipse Lover <a:6954sylveonhappy:1228896788921192458>")
-                                                                .setThumbnail(event.getMember().getEffectiveAvatarUrl())
-                                                                .addField("`Novo Cargo`", cargoMencionado, true)
-                                                                .addField("`Novo Emoji`", emoji.get(0).getAsMention(), true)
-                                                                .addField("`Novo Lover`", user.getAsMention(), true)
-                                                                .setDescription("Eclipse lover editado com sucesso! 🎉")
-                                                                .setImage("https://cdn.discordapp.com/attachments/1151196703475638373/1175693456677539902/5EEB1AA6-B569-43A2-853C-5570A8E9FBD6.gif?ex=6641bbdb&is=66406a5b&hm=ed61b4ca4dee6807c99d9601dd1a8416996e0b8a6e06818031ff4e9178000266&")
-                                                                .setColor(role.getColor());
-
-                                                        event.getHook().sendMessageEmbeds(embedCriar.build()).queue();
-
                                                     }
                                                     catch (SQLException e)
                                                     {
@@ -1785,13 +1781,11 @@ public class SlashCommands extends ListenerAdapter
                                                 {
                                                     System.out.println("Falha na conversão.");
                                                 }
-
                                             }
                                             catch (Exception e)
                                             {
-                                                // TODO: handle exception
+                                                e.printStackTrace();
                                             }
-
                                         }
                                     });
 
@@ -3774,6 +3768,30 @@ public class SlashCommands extends ListenerAdapter
             }
         }
 
+        if(command.equals("parceria"))
+        {
+            String subcommand = event.getSubcommandName();
+
+            if(subcommand.equals("setar"))
+            {
+                User user = event.getOption("nome").getAsUser();
+                Role parceria = event.getGuild().getRoleById("1227990056338194452");
+                Role divindade = event.getGuild().getRoleById("1223394386558320680");
+                Role helper = event.getGuild().getRoleById("1244410454458110092");
+
+                if(hasRole(member, divindade) || hasRole(member, helper))
+                {
+                    event.getGuild().addRoleToMember(user, parceria).queue();
+
+                    event.getHook().sendMessage("Cargo de " + parceria.getAsMention() + " atribuído ao membro " + user.getAsMention()).queue();
+                }
+                else
+                {
+                    event.getHook().sendMessage("Você não tem permissão para usar este comando!").queue();
+                }
+            }
+        }
+
     }
 
     public static boolean hasRole(Member member, Role role)
@@ -3884,6 +3902,12 @@ public class SlashCommands extends ListenerAdapter
                                         .addOption(OptionType.USER, "nome", "nome do membro a quem gostaria de setar o vip", true)
                         ),
 
+                Commands.slash("parceria", "coloca o cargo de parceria em alguém")
+                        .addSubcommands(
+                                new SubcommandData("setar", "coloca o cargo de parceria no usuário")
+                                        .addOption(OptionType.USER, "nome", "nome do membro a quem gostaria de setar o cargo de parceria", true)
+                        ),
+
 
                 Commands.slash("criar", "Comando principal para criar")
                         .addSubcommands(
@@ -3943,32 +3967,32 @@ public class SlashCommands extends ListenerAdapter
                         ),
 
                 Commands.slash("minguantevip", "comandos do VIP Minguante")
-                                .addSubcommands(
-                                        new SubcommandData("criar", "cria o cargo única para o VIP Minguante")
-                                                .addOption(OptionType.STRING, "cargo", "Nome do cargo", true)
-                                                .addOption(OptionType.STRING, "emoji", "Emoji do cargo", true)
-                                                .addOption(OptionType.STRING, "cor", "Cor de hexadecimal", true),
-                                        new SubcommandData("editar", "edita o cargo único para o VIP Minguante")
-                                                .addOption(OptionType.STRING, "cargo", "Novo nome do cargo", true)
-                                                .addOption(OptionType.STRING, "emoji", "Novo emoji do cargo", true)
-                                                .addOption(OptionType.STRING, "cor", "Nova cor em hexadecimal do cargo", true)
-                                ),
+                        .addSubcommands(
+                                new SubcommandData("criar", "cria o cargo única para o VIP Minguante")
+                                        .addOption(OptionType.STRING, "cargo", "Nome do cargo", true)
+                                        .addOption(OptionType.STRING, "emoji", "Emoji do cargo", true)
+                                        .addOption(OptionType.STRING, "cor", "Cor de hexadecimal", true),
+                                new SubcommandData("editar", "edita o cargo único para o VIP Minguante")
+                                        .addOption(OptionType.STRING, "cargo", "Novo nome do cargo", true)
+                                        .addOption(OptionType.STRING, "emoji", "Novo emoji do cargo", true)
+                                        .addOption(OptionType.STRING, "cor", "Nova cor em hexadecimal do cargo", true)
+                        ),
 
                 Commands.slash("moonfriend", "comando do VIP Lua-Cheia")
-                                .addSubcommands(
-                                        new SubcommandData("criar", "cria um cargo compartilhável do VIP Lua-Cheia")
-                                                .addOption(OptionType.STRING, "cargo", "Nome do cargo personalizado", true)
-                                                .addOption(OptionType.STRING, "emoji", "Nome do emoji do cargo", true)
-                                                .addOption(OptionType.STRING, "cor", "Cor do cargo em hexadecimal", true),
-                                        new SubcommandData("editar", "edita o cargo compartilhável do VIP Lua-Cheia")
-                                                .addOption(OptionType.STRING, "cargo", "Novo nome do cargo", true)
-                                                .addOption(OptionType.STRING, "emoji", "Novo emoji do cargo", true)
-                                                .addOption(OptionType.STRING, "cor", "Nova cor do cargo em hexadecimal", true),
-                                        new SubcommandData("give", "dá o cargo moonfriend para outra pessoa")
-                                                .addOption(OptionType.USER, "nome", "nome para quem gostaria de dar o cargo", true),
-                                        new SubcommandData("remove", "remove o cargo de alguém que possui a sua tag")
-                                                .addOption(OptionType.USER, "nome", "nome de quem gostaria de remover a tag", true)
-                                ),
+                        .addSubcommands(
+                                new SubcommandData("criar", "cria um cargo compartilhável do VIP Lua-Cheia")
+                                        .addOption(OptionType.STRING, "cargo", "Nome do cargo personalizado", true)
+                                        .addOption(OptionType.STRING, "emoji", "Nome do emoji do cargo", true)
+                                        .addOption(OptionType.STRING, "cor", "Cor do cargo em hexadecimal", true),
+                                new SubcommandData("editar", "edita o cargo compartilhável do VIP Lua-Cheia")
+                                        .addOption(OptionType.STRING, "cargo", "Novo nome do cargo", true)
+                                        .addOption(OptionType.STRING, "emoji", "Novo emoji do cargo", true)
+                                        .addOption(OptionType.STRING, "cor", "Nova cor do cargo em hexadecimal", true),
+                                new SubcommandData("give", "dá o cargo moonfriend para outra pessoa")
+                                        .addOption(OptionType.USER, "nome", "nome para quem gostaria de dar o cargo", true),
+                                new SubcommandData("remove", "remove o cargo de alguém que possui a sua tag")
+                                        .addOption(OptionType.USER, "nome", "nome de quem gostaria de remover a tag", true)
+                        ),
 
                 Commands.slash("mudae", "comando da mudae")
                         .addSubcommands(
