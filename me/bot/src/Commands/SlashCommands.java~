@@ -115,11 +115,11 @@ public class SlashCommands extends ListenerAdapter
                         embedVIP.setTitle("Informações do VIP");
                         embedVIP.setColor(Color.white);
                         embedVIP.setThumbnail(member.getEffectiveAvatarUrl());
-                        embedVIP.addField("<:person_736:1324030331774308443> Nome do Usuário", "**" + member.getEffectiveName() + "**", false);
-                        embedVIP.addField("<:vip:1324034181503914014> Tipo de VIP", "**" + tipoVip + "**", true);
-                        embedVIP.addField("<:bot_events63:1324030774135095367> Data de Início", "**" + dataInicio + "**", true);
-                        embedVIP.addField("<:bot_events63:1324030774135095367> Data de Vencimento", "**" + dataFim + "**", true);
-                        embedVIP.addField("<:status_streaming:1324031331151249479> Status", "**Ativo**", true);
+                        embedVIP.addField("<:person_736:1324030331774308443> Nome do Usuário", member.getEffectiveName(), false);
+                        embedVIP.addField("<:vip:1324034181503914014> Tipo de VIP", tipoVip, true);
+                        embedVIP.addField("<:bot_events63:1324030774135095367> Data de Início", dataInicio, true);
+                        embedVIP.addField("<:bot_events63:1324030774135095367> Data de Vencimento", dataFim, true);
+                        embedVIP.addField("<:status_streaming:1324031331151249479> Status", "Ativo", true);
                         embedVIP.addField("<:star_vip:1324034359942184980> Benefícios", "<#1228889717014270024>", false);
                         embedVIP.setFooter("Obrigado por ser um VIP!", null);
 
@@ -131,11 +131,11 @@ public class SlashCommands extends ListenerAdapter
                         embedVIP.setTitle("Informações do VIP");
                         embedVIP.setColor(Color.white);
                         embedVIP.setThumbnail(member.getEffectiveAvatarUrl());
-                        embedVIP.addField("<:person_736:1324030331774308443> Nome do Usuário", "**" + member.getEffectiveName() + "**", false);
-                        embedVIP.addField("<:vip:1324034181503914014> Tipo de VIP", "**" + tipoVip + "**", true);
-                        embedVIP.addField("<:bot_events63:1324030774135095367> Data de Início", "**" + dataInicio + "**", true);
-                        embedVIP.addField("<:bot_events63:1324030774135095367> Data de Vencimento", "**" + dataFim + "**", true);
-                        embedVIP.addField("<:status_streaming:1324031331151249479> Status", "**Ativo**", true);
+                        embedVIP.addField("<:person_736:1324030331774308443> Nome do Usuário", member.getEffectiveName(), false);
+                        embedVIP.addField("<:vip:1324034181503914014> Tipo de VIP", tipoVip, true);
+                        embedVIP.addField("<:bot_events63:1324030774135095367> Data de Início", dataInicio, true);
+                        embedVIP.addField("<:bot_events63:1324030774135095367> Data de Vencimento", dataFim, true);
+                        embedVIP.addField("<:status_streaming:1324031331151249479> Status", "Ativo", true);
                         embedVIP.addField("<:star_vip:1324034359942184980> Benefícios", "<#1228889783137472583>", false);
                         embedVIP.setFooter("Obrigado por ser um VIP!", null);
 
@@ -147,11 +147,11 @@ public class SlashCommands extends ListenerAdapter
                         embedVIP.setTitle("Informações do VIP");
                         embedVIP.setColor(Color.white);
                         embedVIP.setThumbnail(member.getEffectiveAvatarUrl());
-                        embedVIP.addField("<:person_736:1324030331774308443> Nome do Usuário", "**" + member.getEffectiveName() + "**", false);
-                        embedVIP.addField("<:vip:1324034181503914014> Tipo de VIP", "**" + tipoVip + "**", true);
-                        embedVIP.addField("<:bot_events63:1324030774135095367> Data de Início", "**" + dataInicio + "**", true);
-                        embedVIP.addField("<:bot_events63:1324030774135095367> Data de Vencimento", "**" + dataFim + "**", true);
-                        embedVIP.addField("<:status_streaming:1324031331151249479> Status", "**Ativo**", true);
+                        embedVIP.addField("<:person_736:1324030331774308443> Nome do Usuário", member.getEffectiveName(), false);
+                        embedVIP.addField("<:vip:1324034181503914014> Tipo de VIP", tipoVip, true);
+                        embedVIP.addField("<:bot_events63:1324030774135095367> Data de Início", dataInicio, true);
+                        embedVIP.addField("<:bot_events63:1324030774135095367> Data de Vencimento", dataFim, true);
+                        embedVIP.addField("<:status_streaming:1324031331151249479> Status", "Ativo", true);
                         embedVIP.addField("<:star_vip:1324034359942184980> Benefícios", "<#1228889937617883166>", false);
                         embedVIP.setFooter("Obrigado por ser um VIP!", null);
 

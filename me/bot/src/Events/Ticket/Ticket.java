@@ -82,6 +82,8 @@ public class Ticket extends ListenerAdapter
                     .addPermissionOverride(guild.getPublicRole(), null, EnumSet.of(Permission.VIEW_CHANNEL))  // Nega permissões para o everyone
                     .complete();
 
+            event.reply("Canal criado em: **" + ticketChannel.getAsMention() + "**!").setEphemeral(true).queue();
+
             ticketChannel.sendMessage(member.getAsMention() + guild.getRoleById(STAFF_ROLE_ID).getAsMention()).queue();
             Color minhacor = new Color(255, 255, 255);
             EmbedBuilder welcomeEmbed = new EmbedBuilder()
