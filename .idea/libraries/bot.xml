@@ -1,9 +1,0 @@
-<component name="libraryTable">
-  <library name="bot">
-    <CLASSES>
-      <root url="jar://$PROJECT_DIR$/me/bot/bot.zip!/" />
-    </CLASSES>
-    <JAVADOC />
-    <SOURCES />
-  </library>
-</component>
