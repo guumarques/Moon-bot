@@ -1,0 +1,138 @@
+package Events;
+
+import net.dv8tion.jda.api.entities.Member;
+import net.dv8tion.jda.api.entities.Role;
+import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
+import net.dv8tion.jda.api.entities.emoji.Emoji;
+import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
+import net.dv8tion.jda.api.entities.Message.Attachment;
+import net.dv8tion.jda.api.hooks.ListenerAdapter;
+import net.dv8tion.jda.api.interactions.commands.OptionMapping;
+import net.dv8tion.jda.api.interactions.components.buttons.Button;
+
+import java.util.List;
+
+public class InstagramEvent extends ListenerAdapter
+{
+    public static void handlePost(SlashCommandInteractionEvent event, Member member, String subcommand)
+    {
+        Role female = event.getGuild().getRoleById("1224517243795406879");
+        Role male = event.getGuild().getRoleById("1224517243271123065");
+        Role naoBinario = event.getGuild().getRoleById("1224517129236381759");
+
+        final TextChannel canalInstagirls = event.getGuild().getTextChannelById("1223676737074888854");
+        final TextChannel canalInstaBoys = event.getGuild().getTextChannelById("1223676625170993192");
+
+        Button likeButton = Button.secondary("curtir", "0").withEmoji(Emoji.fromUnicode("❤\uFE0F"));
+        Button commentButton = Button.secondary("comentar", "0").withEmoji(Emoji.fromUnicode("💬"));
+        Button seeLikes = Button.secondary("vercurtidas", "curtidas").withEmoji(Emoji.fromUnicode("\uD83D\uDC8C"));
+        Button seeComments = Button.secondary("vercomentarios", "comentários").withEmoji(Emoji.fromUnicode("\uD83D\uDCAD"));
+        Button deletePost = Button.danger("deletar", "deletar").withEmoji(Emoji.fromUnicode("🗑️"));
+
+
+        OptionMapping attachmentOption = event.getOption("imagem");
+        if (attachmentOption == null)
+        {
+            event.reply("Você precisa anexar uma imagem!").setEphemeral(true).queue();
+            return;
+        }
+
+        //pega o arquivo
+        Attachment imagem = attachmentOption.getAsAttachment();
+
+        // Verifica se é uma imagem válida
+        if (!imagem.isImage())
+        {
+            event.reply("O arquivo precisa ser uma imagem!").setEphemeral(true).queue();
+            return;
+        }
+
+        if (subcommand.equals("instagirls"))
+        {
+            if (hasRole(member, male) && hasRole(member, female))
+            {
+                event.getHook().sendMessage("Você possui os dois cargos de gênero!").queue();
+                return;
+            }
+            else if (hasRole(member, female))
+            {
+                //pega a imagem e envia para o canal do cargo
+                imagem.getProxy().download().thenAccept(inputStream -> { //proxy envia a imagem sem link apenas depois do download dela
+                    canalInstagirls.sendMessage(member.getAsMention()) // Menciona o usuário
+                            .addFiles(net.dv8tion.jda.api.utils.FileUpload.fromData(inputStream, "imagem.png")) // Envia a imagem sem nome do arquivo
+                            .setActionRow(likeButton, commentButton, seeLikes, seeComments, deletePost)
+                            .queue();
+                });
+
+                event.getHook().sendMessage("Imagem postada em <#1223676737074888854> com sucesso!").queue();
+
+                return;
+            }
+            else if (hasRole(member, naoBinario))
+            {
+                //pega a imagem e envia para o canal do cargo
+                imagem.getProxy().download().thenAccept(inputStream -> { //proxy envia a imagem sem link apenas depois do download dela
+                    canalInstagirls.sendMessage(member.getAsMention()) // Menciona o usuário
+                            .addFiles(net.dv8tion.jda.api.utils.FileUpload.fromData(inputStream, "imagem.png")) // Envia a imagem sem nome do arquivo
+                            .setActionRow(likeButton, commentButton, seeLikes, seeComments, deletePost)
+                            .queue();
+                });
+
+                event.getHook().sendMessage("Imagem postada em <#1223676737074888854> com sucesso!").queue();
+
+                return;
+            }
+            else if (hasRole(member, male))
+            {
+                event.getHook().sendMessage("Apenas mulheres podem usar esse comando!").queue();
+                return;
+            }
+        }
+
+        if (subcommand.equals("instaboys"))
+        {
+            if (hasRole(member, male) && hasRole(member, female))
+            {
+                event.getHook().sendMessage("Você possui os dois cargos de gênero!").queue();
+                return;
+            }
+            else if (hasRole(member, male))
+            {
+                //pega a imagem e envia para o canal do cargo
+                imagem.getProxy().download().thenAccept(inputStream -> { //proxy envia a imagem sem link apenas depois do download dela
+                    canalInstaBoys.sendMessage(member.getAsMention()) // Menciona o usuário
+                            .addFiles(net.dv8tion.jda.api.utils.FileUpload.fromData(inputStream, "imagem.png")) // Envia a imagem sem nome do arquivo
+                            .setActionRow(likeButton, commentButton, seeLikes, seeComments, deletePost)
+                            .queue();
+                });
+
+                event.getHook().sendMessage("Imagem postada em <#1223676625170993192> com sucesso!").queue();
+                return;
+            }
+            else if (hasRole(member, naoBinario))
+            {
+                //pega a imagem e envia para o canal do cargo
+                imagem.getProxy().download().thenAccept(inputStream -> { //proxy envia a imagem sem link apenas depois do download dela
+                    canalInstaBoys.sendMessage(member.getAsMention()) // Menciona o usuário
+                            .addFiles(net.dv8tion.jda.api.utils.FileUpload.fromData(inputStream, "imagem.png")) // Envia a imagem sem nome do arquivo
+                            .setActionRow(likeButton, commentButton, seeLikes, seeComments, deletePost)
+                            .queue();
+                });
+
+                event.getHook().sendMessage("Imagem postada em <#1223676625170993192> com sucesso!").queue();
+                return;
+            }
+            else if (hasRole(member, female))
+            {
+                event.getHook().sendMessage("Apenas homens podem usar esse comando!").queue();
+                return;
+            }
+        }
+    }
+
+    public static boolean hasRole(Member member, Role role)
+    {
+        List<Role> memberRoles = member.getRoles();
+        return memberRoles.contains(role);
+    }
+}

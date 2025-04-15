@@ -1,0 +1,20 @@
+# Banco de dados
+*.db
+*.sqlite
+
+# Arquivos de build e apps
+*.iml
+*.app
+*.jar
+
+# IntelliJ / JetBrains
+.idea/
+*.iws
+*.ipr
+*.iml
+
+# Editor-based HTTP Client
+httpRequests/
+
+# Outros arquivos locais
+*.log

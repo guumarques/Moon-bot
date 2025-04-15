@@ -1,0 +1,133 @@
+package Events;
+
+import java.awt.Color;
+import java.util.List;
+import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.entities.Member;
+import net.dv8tion.jda.api.entities.Message;
+import net.dv8tion.jda.api.entities.Role;
+import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
+import net.dv8tion.jda.api.entities.channel.middleman.MessageChannel;
+import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
+import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
+import net.dv8tion.jda.api.hooks.ListenerAdapter;
+import net.dv8tion.jda.api.interactions.components.buttons.Button;
+
+public class BirthdayRole extends ListenerAdapter
+{
+    private static final String BIRTHDAY_CHANNEL_ID = "1355201899359637504";
+    private static final String BIRTHDAY_ROLE_ID = "1355183084852478084";
+    private static final String DIVINDADE_ROLE_ID = "1223394386558320680";
+
+    @Override
+    public void onMessageReceived(MessageReceivedEvent event)
+    {
+        super.onMessageReceived(event);
+        Message message = event.getMessage();
+        String content = message.getContentRaw();
+        Member member = event.getMember();
+
+        if(event.getChannel().getType().isMessage() && event.getChannel() instanceof TextChannel channel && event.getChannel().getId().equals(BIRTHDAY_CHANNEL_ID))
+        {
+            Role divindade = event.getGuild().getRoleById(DIVINDADE_ROLE_ID);
+            if(content.equalsIgnoreCase("!birthday") && hasRole(member, divindade ))
+            {
+                canalBirthday(channel);
+            }
+        }
+    }
+
+    @Override
+    public void onButtonInteraction(ButtonInteractionEvent event)
+    {
+        if (event.getComponentId().equals("birthday_confirm")) {
+
+            // Defer a resposta da interação
+
+            event.deferReply(true).queue();
+
+
+            // Verifica se a interação é do botão "confirm"
+
+            Member member = event.getMember();
+
+            Guild guild = event.getGuild();
+
+
+            if (member != null && guild != null)
+            {
+
+                Role memberRole = guild.getRoleById(BIRTHDAY_ROLE_ID);
+
+                if (memberRole != null)
+                {
+
+                    // Adiciona o cargo ao membro
+
+                    guild.addRoleToMember(member, memberRole).queue(success ->
+                    {
+
+                        // Responde à interação com sucesso
+
+                        event.getHook().sendMessage("Cargo " + memberRole.getAsMention() + " adicionado com sucesso!").setEphemeral(true).queue();
+
+                    }, failure ->
+                    {
+
+                        // Responde à interação em caso de falha
+
+                        event.getHook().sendMessage("Ocorreu um erro ao adicionar o cargo. Tente novamente mais tarde.").setEphemeral(true).queue();
+
+                    });
+
+                }
+                else
+                {
+
+                    event.getHook().sendMessage("Cargo não encontrado!").setEphemeral(true).queue(); // Responde à interação
+
+                }
+
+            }
+            else
+            {
+
+                event.getHook().sendMessage("Não foi possível encontrar suas informações de membro.").setEphemeral(true).queue();
+
+            }
+
+        }
+    }
+
+    private void canalBirthday(MessageChannel channel)
+    {
+        Guild guild = channel.getJDA().getGuildById("1223392724497993778");
+        Role aniversaryRole = guild.getRoleById(BIRTHDAY_ROLE_ID);
+
+        // Cria uma EmbedBuilder
+        EmbedBuilder embed = new EmbedBuilder();
+        embed.setTitle("<a:ConfettiPopper:1355209378634010664> 1 Ano de Comunidade! <a:ConfettiPopper:1355209378634010664>", null);
+        embed.setDescription("Hoje celebramos **1 ano** do nosso incrível servidor! <:MilkCake:1355209987902672916>\n\n" +
+                "Para marcar essa data especial, estamos lançando um cargo comemorativo permanente! \n\n" +
+                "Garanta o seu " + aniversaryRole.getAsMention() + " e mostre que você faz parte da nossa história! <a:BalloonParty:1355215638142128341>    ");
+        embed.setColor(Color.YELLOW); // Cor vibrante para destacar a celebração
+        embed.setImage("https://imgur.com/9LHKPcn.gif"); // Banner animado da comemoração
+        embed.setFooter("Obrigado por fazer parte da nossa jornada! ❤️");
+
+
+
+        // Cria um botão
+        Button button = Button.success("birthday_confirm", "Ganhar o cargo de aniversário de um ano");
+
+        // Envia a mensagem com a embed e o botão
+        channel.sendMessageEmbeds(embed.build()).setActionRow(button).queue();
+    }
+
+    public static boolean hasRole(Member member, Role role)
+    {
+        List<Role> memberRoles = member.getRoles();
+        return memberRoles.contains(role);
+    }
+
+}

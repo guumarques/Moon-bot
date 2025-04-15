@@ -1,0 +1,256 @@
+package Events;
+
+import Commands.ConnectionDB;
+import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.entities.Member;
+import net.dv8tion.jda.api.entities.MessageEmbed;
+import net.dv8tion.jda.api.entities.Role;
+import net.dv8tion.jda.api.entities.User;
+import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
+import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
+import net.dv8tion.jda.api.hooks.ListenerAdapter;
+import org.json.JSONObject;
+import java.awt.*;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.time.LocalDate;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+public class ParceriaCounter extends ListenerAdapter
+{
+
+    @Override
+    public void onMessageReceived(MessageReceivedEvent event) {
+        Role helper = event.getGuild().getRoleById("1244410454458110092");
+        Role divindade = event.getGuild().getRoleById("1223394386558320680");
+        Role staff = event.getGuild().getRoleById("1223852657244897361");
+        Role parceria = event.getGuild().getRoleById("1227990056338194452");
+        Role pingParceria = event.getGuild().getRoleById("1257307036933296149");
+
+        String messageContent = event.getMessage().getContentRaw();
+
+        // Expressão regular para encontrar "rep: " seguido de uma menção de usuário
+        String regex = "rep:\\s*[^<]*<@!?\\d+>";
+        String regex2 = "representante:\\s*[^<]*<@!?\\d+>";
+        Pattern pattern = Pattern.compile(regex, Pattern.CASE_INSENSITIVE);
+        Pattern pattern2 = Pattern.compile(regex2, Pattern.CASE_INSENSITIVE);
+        Matcher matcher = pattern.matcher(messageContent);
+        Matcher matcher2 = pattern2.matcher(messageContent);
+
+        if(event.getChannel().getType().isMessage() && event.getChannel() instanceof TextChannel channel)
+        {
+            if (matcher.find() || matcher2.find() && channel.getId().equals("1240379930542346372"))
+            {
+                if (!event.getMessage().getMentions().getMembers().isEmpty())
+                {
+                    Member member = event.getMessage().getMentions().getMembers().get(0);
+                    Member user = event.getMember();
+
+                    if ((hasRole(user, staff) || hasRole(user, helper) || hasRole(user, divindade)) && hasRole(member, parceria))
+                    {
+                        try
+                        {
+                            String query = "SELECT contador FROM parceriaContador WHERE idMembro = ?";
+                            PreparedStatement statement = ConnectionDB.getBumpConnection().prepareStatement(query);
+                            statement.setString(1, user.getId());
+                            ResultSet rs = statement.executeQuery();
+
+                            if (rs.next())
+                            {
+                                int number = rs.getInt("contador") + 1;
+
+                                String query2 = "UPDATE parceriaContador SET contador = ? WHERE idMembro = ?";
+                                PreparedStatement statement2 = ConnectionDB.getBumpConnection().prepareStatement(query2);
+                                statement2.setInt(1, number);
+                                statement2.setString(2, user.getId());
+
+                                int rowsAffected = statement2.executeUpdate();
+
+                                if (rowsAffected > 0)
+                                {
+                                    System.out.println("sucesso ao atualizar o contador de parcerias");
+
+                                    String inviteCode = extractInviteCode(messageContent);
+                                    String serverName = getServerNameFromInvite(inviteCode); // Obtém o nome do servidor
+
+                                    try
+                                    {
+                                        String query3 = "SELECT idMembro, contador, RANK() OVER (ORDER BY contador DESC) AS rank FROM parceriaContador";
+                                        PreparedStatement statement3 = ConnectionDB.getBumpConnection().prepareStatement(query3);
+                                        ResultSet rs3 = statement3.executeQuery();
+
+                                        int rankingPosition = 0;
+                                        while (rs3.next())
+                                        {
+                                            if (rs3.getString("idMembro").equals(user.getId()))
+                                            {
+                                                rankingPosition = rs3.getInt("rank");
+                                            }
+                                        }
+                                        channel.sendMessage(pingParceria.getAsMention() + parceria.getAsMention()).queue();
+                                        MessageEmbed embed = new EmbedBuilder()
+                                                .setColor(Color.decode("#fccfcc"))
+                                                .setAuthor("🔔✨───────────────────────✨🔔", null, event.getMember().getEffectiveAvatarUrl())
+                                                .setTitle("<a:partnership:1291884694505390134> Nova Parceria Fechada! <a:partnership:1291884694505390134>")
+                                                .addField("<:EventManagerRoleIcon:1291880796067467305>`Servidor:`", "**" + serverName + "**", true)  // Campo para o nome do servidor
+                                                .addField("<:MemberRoleIcon:1291880959746248896>`Rep:`", "**" + member.getAsMention() + "**", true)  // Campo para o representante
+                                                .addField("<:Server_Manager:1291880367867035753>`Ranking:`", "**#" + rankingPosition + "**", true)  // Campo para o ranking
+                                                .addField("<:TwitchPartner:1291881095553486880>`Parcerias feitas:`", "**" + String.valueOf(number) + "**", true)
+                                                .setThumbnail(member.getEffectiveAvatarUrl())
+                                                .setImage("https://imgur.com/YFxTxUn.gif")
+                                                .setFooter("Data da parceria: " + LocalDate.now().toString(), event.getGuild().getIconUrl())
+                                                .build();
+                                        event.getChannel().sendMessageEmbeds(embed).queue();
+                                    }
+                                    catch (Exception e)
+                                    {
+                                        e.printStackTrace();
+                                    }
+                                }
+                                else
+                                {
+                                    System.out.println("Falha ao atualizar o contador");
+                                }
+
+                                statement2.close();
+                            }
+                            else
+                            {
+                                String query2 = "INSERT INTO parceriaContador(idMembro, nome, contador) VALUES(?, ?, 1);";
+                                PreparedStatement statement2 = ConnectionDB.getBumpConnection().prepareStatement(query2);
+                                statement2.setString(1, user.getId());
+                                statement2.setString(2, user.getEffectiveName());
+
+                                int rowsAffected = statement2.executeUpdate();
+
+                                if (rowsAffected > 0)
+                                {
+                                    System.out.println("Nova parceria do membro inserido com sucesso!");
+
+                                    String inviteCode = extractInviteCode(messageContent);
+                                    String serverName = getServerNameFromInvite(inviteCode); // Obtém o nome do servidor
+
+                                    try
+                                    {
+                                        String query3 = "SELECT idMembro, contador, RANK() OVER (ORDER BY contador DESC) AS rank FROM parceriaContador";
+                                        PreparedStatement statement3 = ConnectionDB.getBumpConnection().prepareStatement(query3);
+                                        ResultSet rs3 = statement3.executeQuery();
+
+                                        int number = rs.getInt("contador") + 1;
+                                        int rankingPosition = 0;
+                                        while (rs3.next()) {
+                                            if (rs3.getString("idMembro").equals(user.getId()))
+                                            {
+                                                rankingPosition = rs3.getInt("rank");
+                                            }
+                                        }
+
+                                        channel.sendMessage(pingParceria.getAsMention() + parceria.getAsMention()).queue();
+                                        MessageEmbed embed = new EmbedBuilder()
+                                                .setColor(Color.decode("#fccfcc"))
+                                                .setAuthor("🔔✨───────────────────────✨🔔", null, event.getMember().getEffectiveAvatarUrl())
+                                                .setTitle("<a:partnership:1291884694505390134> Nova Parceria Fechada! <a:partnership:1291884694505390134>")
+                                                .addField("<:EventManagerRoleIcon:1291880796067467305>`Servidor:`", "**" + serverName + "**", true)  // Campo para o nome do servidor
+                                                .addField("<:MemberRoleIcon:1291880959746248896>`Rep:`", "**" + member.getAsMention() + "**", true)  // Campo para o representante
+                                                .addField("<:Server_Manager:1291880367867035753>`Ranking:`", "**#" + rankingPosition + "**", true)  // Campo para o ranking
+                                                .addField("<:TwitchPartner:1291881095553486880>`Parcerias feitas:`", "**" + String.valueOf(number) + "**", true)
+                                                .setThumbnail(member.getEffectiveAvatarUrl())
+                                                .setImage("https://imgur.com/YFxTxUn.gif")
+                                                .setFooter("Data da parceria: " + LocalDate.now().toString(), event.getGuild().getIconUrl())
+                                                .build();
+                                        event.getChannel().sendMessageEmbeds(embed).queue();
+                                    }
+                                    catch (Exception e)
+                                    {
+                                        e.printStackTrace();
+                                    }
+                                }
+                                else
+                                {
+                                    System.out.println("Erro ao inserir a nova parceria no BD");
+                                }
+
+                                statement2.close();
+                            }
+
+                            rs.close();
+                            statement.close();
+                        }
+                        catch (SQLException e)
+                        {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+            }
+        }
+
+        else
+        {
+            System.out.println("O canal não é do tipo TextChannel, é um " + event.getChannel().getType());
+        }
+    }
+
+    // Função para extrair o código de convite de uma mensagem
+    public String extractInviteCode(String messageContent)
+    {
+        Pattern pattern = Pattern.compile("(?:https?://)?(?:www\\.)?(?:discord\\.com/invite/|discord\\.gg/)([a-zA-Z0-9-]+)");
+        Matcher matcher = pattern.matcher(messageContent);
+        if (matcher.find())
+        {
+            return matcher.group(1);  // Retorna o código de convite
+        }
+        return null;  // Caso não encontre um convite
+    }
+
+    // Função para buscar o nome do servidor a partir do código de convite
+    public String getServerNameFromInvite(String inviteCode)
+    {
+        if (inviteCode == null)
+        {
+            return "Servidor não encontrado";
+        }
+        String apiUrl = "https://discord.com/api/v10/invites/" + inviteCode;
+
+        try
+        {
+            URL url = new URL(apiUrl);
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setRequestMethod("GET");
+            connection.setRequestProperty("Content-Type", "application/json");
+
+            BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+            String inputLine;
+            StringBuilder content = new StringBuilder();
+            while ((inputLine = in.readLine()) != null)
+            {
+                content.append(inputLine);
+            }
+
+            in.close();
+            connection.disconnect();
+
+            JSONObject response = new JSONObject(content.toString());
+            return response.getJSONObject("guild").getString("name");
+
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+            return "Erro ao obter o nome do servidor";
+        }
+    }
+
+    public static boolean hasRole(Member member, Role role)
+    {
+        List<Role> memberRoles = member.getRoles();
+        return memberRoles.contains(role);
+    }
+}

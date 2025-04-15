@@ -1,0 +1,197 @@
+package Events.Instagram;
+
+import Commands.ConnectionDB;
+import net.dv8tion.jda.api.entities.Member;
+import net.dv8tion.jda.api.entities.Role;
+import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
+import net.dv8tion.jda.api.entities.emoji.Emoji;
+import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
+import net.dv8tion.jda.api.entities.Message.Attachment;
+import net.dv8tion.jda.api.hooks.ListenerAdapter;
+import net.dv8tion.jda.api.interactions.commands.OptionMapping;
+import net.dv8tion.jda.api.interactions.components.buttons.Button;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
+
+public class InstagramEvent extends ListenerAdapter
+{
+    public static void handlePost(SlashCommandInteractionEvent event, Member member, String subcommand)
+    {
+        Role female = event.getGuild().getRoleById("1224517243795406879");
+        Role male = event.getGuild().getRoleById("1224517243271123065");
+        Role naoBinario = event.getGuild().getRoleById("1224517129236381759");
+
+        final TextChannel canalInstagirls = event.getGuild().getTextChannelById("1223676737074888854");
+        final TextChannel canalInstaBoys = event.getGuild().getTextChannelById("1223676625170993192");
+
+        Button likeButton = Button.secondary("curtir", "0").withEmoji(Emoji.fromUnicode("❤\uFE0F"));
+        Button commentButton = Button.secondary("comentar", "0").withEmoji(Emoji.fromUnicode("💬"));
+        Button seeLikes = Button.secondary("vercurtidas", "curtidas").withEmoji(Emoji.fromUnicode("\uD83D\uDC8C"));
+        Button seeComments = Button.secondary("vercomentarios", "comentários").withEmoji(Emoji.fromUnicode("\uD83D\uDCAD"));
+        Button deletePost = Button.danger("deletar", "deletar").withEmoji(Emoji.fromUnicode("🗑️"));
+
+
+        OptionMapping attachmentOption = event.getOption("imagem");
+        if (attachmentOption == null)
+        {
+            event.reply("Você precisa anexar uma imagem!").setEphemeral(true).queue();
+            return;
+        }
+
+        //pega o arquivo
+        Attachment attachment = attachmentOption.getAsAttachment();
+
+        // Verifica se é uma imagem válida
+        if (!attachment.isImage() && !attachment.isVideo())
+        {
+            event.reply("O arquivo precisa ser uma imagem ou vídeo!").setEphemeral(true).queue();
+            return;
+        }
+
+        String fileName = attachment.getFileName(); // Pega o nome do arquivo original
+        String fileExtension = fileName.substring(fileName.lastIndexOf(".") + 1); // Pega a extensão do arquivo
+
+        if (subcommand.equals("instagirls"))
+        {
+            if (hasRole(member, male) && hasRole(member, female))
+            {
+                event.getHook().sendMessage("Você possui os dois cargos de gênero!").queue();
+                return;
+            }
+            else if (hasRole(member, female))
+            {
+                //pega a imagem e envia para o canal do cargo
+                attachment.getProxy().download().thenAccept(inputStream -> { //proxy envia a imagem sem link apenas depois do download dela
+                    canalInstagirls.sendMessage(member.getAsMention()) // Menciona o usuário
+                            .addFiles(net.dv8tion.jda.api.utils.FileUpload.fromData(inputStream, fileName)) // Envia a imagem sem nome do arquivo
+                            .setActionRow(likeButton, commentButton, seeLikes, seeComments, deletePost)
+                            .queue(message ->
+                                    {
+                                        String messageID = message.getId();
+                                        adicionaBD(member, canalInstagirls, attachment, messageID);
+                                    }
+                            );
+
+                });
+
+                event.getHook().sendMessage("Imagem postada em <#1223676737074888854> com sucesso!").queue();
+
+                return;
+            }
+            else if (hasRole(member, naoBinario))
+            {
+                //pega a imagem e envia para o canal do cargo
+                attachment.getProxy().download().thenAccept(inputStream -> { //proxy envia a imagem sem link apenas depois do download dela
+                    canalInstagirls.sendMessage(member.getAsMention()) // Menciona o usuário
+                            .addFiles(net.dv8tion.jda.api.utils.FileUpload.fromData(inputStream, "imagem.png")) // Envia a imagem sem nome do arquivo
+                            .setActionRow(likeButton, commentButton, seeLikes, seeComments, deletePost)
+                            .queue(message ->
+                                    {
+                                        String messageID = message.getId();
+                                        adicionaBD(member, canalInstagirls, attachment, messageID);
+                                    }
+                            );
+
+                });
+
+                event.getHook().sendMessage("Imagem postada em <#1223676737074888854> com sucesso!").queue();
+
+                return;
+            }
+            else if (hasRole(member, male))
+            {
+                event.getHook().sendMessage("Apenas mulheres podem usar esse comando!").queue();
+                return;
+            }
+        }
+
+        if (subcommand.equals("instaboys"))
+        {
+            if (hasRole(member, male) && hasRole(member, female))
+            {
+                event.getHook().sendMessage("Você possui os dois cargos de gênero!").queue();
+                return;
+            }
+            else if (hasRole(member, male))
+            {
+                //pega a imagem e envia para o canal do cargo
+                attachment.getProxy().download().thenAccept(inputStream -> { //proxy envia a imagem sem link apenas depois do download dela
+                    canalInstaBoys.sendMessage(member.getAsMention()) // Menciona o usuário
+                            .addFiles(net.dv8tion.jda.api.utils.FileUpload.fromData(inputStream, "imagem.png")) // Envia a imagem sem nome do arquivo
+                            .setActionRow(likeButton, commentButton, seeLikes, seeComments, deletePost)
+                            .queue(message ->
+                                    {
+                                        String messageID = message.getId();
+                                        adicionaBD(member, canalInstaBoys, attachment, messageID);
+                                    }
+
+                            );
+                });
+
+                event.getHook().sendMessage("Imagem postada em <#1223676625170993192> com sucesso!").queue();
+                return;
+            }
+            else if (hasRole(member, naoBinario))
+            {
+                //pega a imagem e envia para o canal do cargo
+                attachment.getProxy().download().thenAccept(inputStream -> { //proxy envia a imagem sem link apenas depois do download dela
+                    canalInstaBoys.sendMessage(member.getAsMention()) // Menciona o usuário
+                            .addFiles(net.dv8tion.jda.api.utils.FileUpload.fromData(inputStream, "imagem.png")) // Envia a imagem sem nome do arquivo
+                            .setActionRow(likeButton, commentButton, seeLikes, seeComments, deletePost)
+                            .queue(message ->
+                                    {
+                                        String messageID = message.getId();
+                                        adicionaBD(member, canalInstaBoys, attachment, messageID);
+                                    }
+
+                            );
+
+
+                });
+
+                event.getHook().sendMessage("Imagem postada em <#1223676625170993192> com sucesso!").queue();
+                return;
+            }
+            else if (hasRole(member, female))
+            {
+                event.getHook().sendMessage("Apenas homens podem usar esse comando!").queue();
+                return;
+            }
+        }
+    }
+
+    private static void adicionaBD(Member member, TextChannel textChannel, Attachment imagem, String message)
+    {
+        try
+        {
+            SimpleDateFormat data = new SimpleDateFormat("dd/MM/yyyy");
+            String dataFormatada = data.format(new Date());
+
+            String query = "INSERT INTO posts(member_id, message_id, channel_id, image_url, date_created) VALUES(?, ?, ?, ?, ?)";
+            PreparedStatement statement = ConnectionDB.getInstagramConnection().prepareStatement(query);
+
+            statement.setString(1, member.getId());
+            statement.setString(2, message);
+            statement.setString(3, textChannel.getId());
+            statement.setString(4, imagem.getUrl());
+            statement.setString(5, dataFormatada);
+
+            statement.executeUpdate();
+
+            System.out.println("Foto do membro " + member.getEffectiveName() + " adicionada ao banco de dados.");
+        }
+        catch (SQLException e)
+        {
+            e.printStackTrace();
+        }
+    }
+
+    public static boolean hasRole(Member member, Role role)
+    {
+        List<Role> memberRoles = member.getRoles();
+        return memberRoles.contains(role);
+    }
+}

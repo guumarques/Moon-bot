@@ -1,0 +1,10 @@
+<component name="libraryTable">
+  <library name="bot">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/Moonbot.jar!/" />
+      <root url="jar://$PROJECT_DIR$/bot.zip!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
