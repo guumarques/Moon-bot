@@ -13,7 +13,7 @@ Bem-vindo ao repositório do **Moon Bot**! 🌙 Este bot foi criado para transfo
 
 ## 🧑‍💻 **Como Instalar e Usar**
 
-Para um passo a passo completo sobre como instalar o **Moon Bot** no seu servidor, assista ao vídeo tutorial abaixo:
+Para um passo a passo completo sobre como instalar um bot no seu servidor, assista ao vídeo tutorial abaixo:
 
 [🎥 **Assista ao tutorial de instalação no YouTube**](https://www.youtube.com/watch?v=LFsxkWME7M0&t=2s)
 
